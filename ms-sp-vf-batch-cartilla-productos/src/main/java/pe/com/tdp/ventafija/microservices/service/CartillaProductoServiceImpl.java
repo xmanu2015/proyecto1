@@ -21,10 +21,7 @@ import pe.com.tdp.ventafija.microservices.util.StringUtils;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -256,11 +253,11 @@ public class CartillaProductoServiceImpl {
             String provincias = invent.getProvincia().replace("ñ", "n");
             String distrito = invent.getDistrito().replace("ñ", "n");
 
-            listCaneles.add(caneles);
-            listEntidades.add(entidades);
-            listCampanas.add(campanas);
-            listProvincias.add(provincias);
-            listDistrito.add(distrito);
+            listCaneles = Arrays.asList(caneles.split("-"));
+            listEntidades = Arrays.asList(entidades.split("-"));
+            listCampanas = Arrays.asList(campanas.split("-"));
+            listProvincias = Arrays.asList(provincias.split("-"));
+            listDistrito = Arrays.asList(distrito.split("-"));
 
             for (String prov: listProvincias) {
                 if ('-' ==)
