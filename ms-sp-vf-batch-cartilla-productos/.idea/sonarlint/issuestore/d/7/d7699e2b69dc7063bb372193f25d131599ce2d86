@@ -1,0 +1,16 @@
+
+y
+java:S2629."\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(±ø’³8¡±Ë€³.
+c
+java:S3457&"AFormat specifiers should be used instead of string concatenation.(Õ­‘Äþÿÿÿÿ8¡±Ë€³.
+u
+java:S1128"SRemove this unused import 'org.springframework.beans.factory.annotation.Autowired'.(¡ž¸Îùÿÿÿÿ8àœË€³.
+c
+java:S3457T"AFormat specifiers should be used instead of string concatenation.(œ²”èùÿÿÿÿ8¡±Ë€³.
+j	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾ÒÞé8¡±Ë€³.
+[
+java:S14812"9Remove this unused "fechaActualTimestamp" local variable.(ìí¯õþÿÿÿÿ8¡±Ë€³.
+Y
+java:S2629&"7Use the built-in formatting to construct this argument.(Õ­‘Äþÿÿÿÿ8¡±Ë€³.
+^
+java:S3457."AFormat specifiers should be used instead of string concatenation.(±ø’³8¡±Ë€³.

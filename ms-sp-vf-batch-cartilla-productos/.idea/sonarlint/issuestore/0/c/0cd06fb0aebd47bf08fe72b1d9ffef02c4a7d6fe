@@ -1,0 +1,13 @@
+
+Y
+java:S2629!"7Use the built-in formatting to construct this argument.(Õ­‘Äþÿÿÿÿ8›¨©Ù².
+c
+java:S3457!"AFormat specifiers should be used instead of string concatenation.(Õ­‘Äþÿÿÿÿ8›¨©Ù².
+y
+java:S2629)"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(±ø’³8¤ûÙ‚³.
+[
+java:S1481-"9Remove this unused "fechaActualTimestamp" local variable.(ìí¯õþÿÿÿÿ8ï‘¹Ù².
+^
+java:S3457)"AFormat specifiers should be used instead of string concatenation.(±ø’³8¤ûÙ‚³.
+c
+java:S3457|"AFormat specifiers should be used instead of string concatenation.(œ²”èùÿÿÿÿ8•œø‚³.

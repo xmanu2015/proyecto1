@@ -1,0 +1,31 @@
+---
+applications:
+- name: JOB-CARTILLA-PRODUCTOS-TEST
+  routes:
+  - route: job-cartilla-productos-test.mybluemix.net/
+  memory: 2GB
+  instances: 1
+  path: build/libs/ms-sp-vf-batch-cartilla-productos-1.0.1.RELEASE.jar
+  buildpack: java_buildpack
+  health-check-type: process
+  disk_quota: 2GB
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
+    CF_STARTUP_TIMEOUT: 5
+    CF_STAGING_TIMEOUT: 5
+    TZ: America/Lima
+    JAVA_OPTS: -Djdk.http.auth.tunneling.disabledSchemes="",jdk.http.auth.proxying.disabledSchemes=""
+
+    TDP_FIJA_DB_URL: jdbc:postgresql://sl-us-south-1-portal.47.dblayer.com:22832/compose?currentSchema=ibmx_a07e6d02edaf552&useSSL=false&characterEncoding=utf-8
+    TDP_FIJA_DB_PW: PHOHIIACWMQRLJBY
+    TDP_FIJA_DB_USR: admin
+
+    TDP_MT_DB_URL: jdbc:postgresql://sl-us-south-1-portal.33.dblayer.com:56296/compose?useSSL=false
+    TDP_MT_DB_PW: PVWVDQBRVQCQMBJX
+
+    TDP_FIJA_DB_DRIVER: org.postgresql.Driver
+    TDP_FIJA_DB_POOLING: 100
+    TDP_FIJA_DB_MINIMUM_IDLE: 10
+
+    TDP_FIJA_DB_TIMEOUT_IDLE: 300000
+    TDP_FIJA_DB_MAX_LIFETIME: 300000
