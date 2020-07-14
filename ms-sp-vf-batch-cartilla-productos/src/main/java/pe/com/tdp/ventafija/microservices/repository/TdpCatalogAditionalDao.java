@@ -36,7 +36,7 @@ public class TdpCatalogAditionalDao {
                     " (product_id," +
                     "parameter_id," +
                     "value," +
-                    "herramienta," +
+                    "herramienta) " +
                     " values (?,?,?,?)";
 
             PreparedStatement psInsert = con.prepareStatement(insert);
@@ -50,10 +50,10 @@ public class TdpCatalogAditionalDao {
 
             for (TdpCatalogAditionalData invent : invents) {
 
-                psInsert.setString(1, String.valueOf(invent.getProductId()));
-                psInsert.setString(2, String.valueOf(invent.getParameterId()));
+                psInsert.setInt(1, invent.getProductId());
+                psInsert.setInt(2, invent.getParameterId());
                 psInsert.setString(3, invent.getValue());
-                psInsert.setString(3, invent.getHerramienta());
+                psInsert.setString(4, invent.getHerramienta());
                 psInsert.addBatch();
 
                 countBatch++;

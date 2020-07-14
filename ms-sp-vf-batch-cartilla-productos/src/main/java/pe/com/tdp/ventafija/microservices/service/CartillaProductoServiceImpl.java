@@ -246,9 +246,10 @@ public class CartillaProductoServiceImpl {
         List<String> listProvincias = new ArrayList<>();
         List<String> listDistrito = new ArrayList<>();
 
-        List<String> ubicaciones = new ArrayList<>();
+
         for (TdpCatalogData invent : outsCatalog) {
 
+            List<String> ubicaciones = new ArrayList<>();
             String caneles = invent.getCanal().replace("ñ", "n");
             String entidades = invent.getEntidad().replace("ñ", "n");
             String campanas = invent.getCampaign().replace("ñ", "n");
