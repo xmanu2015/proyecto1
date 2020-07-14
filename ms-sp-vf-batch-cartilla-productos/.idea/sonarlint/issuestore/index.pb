@@ -9,10 +9,6 @@ A
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 …
 Usrc/main/java/pe/com/tdp/ventafija/microservices/CartillaProductosTdpApplication.java,4\d\4dd8e03a1f3cdbb74a07799211d203ca38c383d3
-Š
-Zsrc/main/java/pe/com/tdp/ventafija/microservices/repository/InventarioPuntosVentaDao2.java,d\7\d7699e2b69dc7063bb372193f25d131599ce2d86
-‰
-Ysrc/main/java/pe/com/tdp/ventafija/microservices/repository/InventarioPuntosVentaDao.java,4\9\49fdcae6f1a6b387431f5941dcd79175b7954498
 }
 Msrc/main/java/pe/com/tdp/ventafija/microservices/domain/dto/InventResult.java,3\a\3a90c991ffada43d21ff5f5f7563e64b39384401
 Ž
@@ -23,8 +19,6 @@ u
 Esrc/main/java/pe/com/tdp/ventafija/microservices/domain/Response.java,d\a\da9f95c4955a646b0cf4bcb8b961b7822ec2c5a6
 …
 Usrc/main/java/pe/com/tdp/ventafija/microservices/repository/TdpCatalogRepository.java,b\f\bfd0095f879fd76e97fd7541be101cbd5c6a5bc0
-†
-Vsrc/main/java/pe/com/tdp/ventafija/microservices/service/CargaCartillaProductosMT.java,7\6\76fe8e608420ae1573921129ff74c66f39a18cfa
 {
 Ksrc/main/java/pe/com/tdp/ventafija/microservices/domain/TdpCatalogData.java,9\4\9452eb8162d4e558d4773b09129b77675a8d9ac7
 ~
