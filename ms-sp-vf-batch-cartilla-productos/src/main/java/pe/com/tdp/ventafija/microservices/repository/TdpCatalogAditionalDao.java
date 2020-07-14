@@ -50,8 +50,8 @@ public class TdpCatalogAditionalDao {
 
             for (TdpCatalogAditionalData invent : invents) {
 
-                psInsert.setString(1, invent.getProductId());
-                psInsert.setString(2, invent.getParameterId());
+                psInsert.setString(1, String.valueOf(invent.getProductId()));
+                psInsert.setString(2, String.valueOf(invent.getParameterId()));
                 psInsert.setString(3, invent.getValue());
                 psInsert.setString(3, invent.getHerramienta());
                 psInsert.addBatch();
