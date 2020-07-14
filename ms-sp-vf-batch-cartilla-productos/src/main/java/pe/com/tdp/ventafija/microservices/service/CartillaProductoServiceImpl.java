@@ -43,6 +43,8 @@ public class CartillaProductoServiceImpl {
     @Value("${visor.api.sync.enabled}")
     private Boolean syncEnabled;
 
+    List<TdpCatalogAditionalData> outsCatalogAditional = new ArrayList<>();
+
     //@Scheduled(cron = "${carga.cartilla.productosMT.api.sync.cron}")
     @Scheduled(cron = "*/30 * * * * *")
     public void loadFileOut() {
@@ -243,8 +245,8 @@ public class CartillaProductoServiceImpl {
         List<String> listCampanas = new ArrayList<>();
         List<String> listProvincias = new ArrayList<>();
         List<String> listDistrito = new ArrayList<>();
-        List<TdpCatalogAditionalData> outsCatalogAtional = new ArrayList<>();
 
+        List<String> ubicaciones = new ArrayList<>();
         for (TdpCatalogData invent : outsCatalog) {
 
             String caneles = invent.getCanal().replace("ñ", "n");
@@ -259,24 +261,48 @@ public class CartillaProductoServiceImpl {
             listProvincias = Arrays.asList(provincias.split("-"));
             listDistrito = Arrays.asList(distrito.split("-"));
 
+            int indiceUbicacion = 0;
             for (String prov: listProvincias) {
-                if ('-' ==)
+                if (distrito.equals("-")){
+                    ubicaciones.add(prov + "-todo");
+                }else{
+                    if(listDistrito.get(indiceUbicacion) !=null
+                    && !listDistrito.get(indiceUbicacion).isEmpty()){
+                        List<String> distritosPorProvincia = Arrays.asList(listDistrito.get(indiceUbicacion).split("-"));
+                        indiceUbicacion++;
+                        for (String distritoPorProvincia: distritosPorProvincia ) {
+                            ubicaciones.add(prov.trim() + "-" + distritoPorProvincia.trim());
+                        }
+                    }
+                }
+
             }
 
 
+            addAditionalData(invent, "6527", listCaneles, fileNameTxt);
+            addAditionalData(invent, "6528", listEntidades, fileNameTxt);
+            addAditionalData(invent, "6529", ubicaciones, fileNameTxt);
+            addAditionalData(invent, "6530", listCampanas, fileNameTxt);
 
 
 
-            TdpCatalogAditionalData model = new TdpCatalogAditionalData();
-            model.setProductId(invent.getProdtypecode());
-            model.setParameterId("");
-            model.setValue("");
-            model.setHerramienta("");
-            outsCatalogAtional.add(model);
         }
 
-        InventResult resultCatalogCatalogAditional = tdpCatalogAditionalDao.CatalogAditional(outsCatalogAtional, fileNameTxt);
+        InventResult resultCatalogCatalogAditional = tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
 
     }
+
+    private void addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt) {
+
+        for (String obj:lista) {
+            TdpCatalogAditionalData model = new TdpCatalogAditionalData();
+            model.setProductId(invent.getProdtypecode());
+            model.setParameterId(additionalCode);
+            model.setValue(obj.trim().toUpperCase());
+            model.setHerramienta(fileNameTxt);
+            outsCatalogAditional.add(model);
+        }
+    }
+
 
 }
