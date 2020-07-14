@@ -26,12 +26,12 @@ public class TdpCatalogDao {
         int totalOrderUpdate = 0;
 
         try (Connection con = Database.datasource().getConnection()) {
-            String delete = " DELETE FROM tdp_catalog_2";
+            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog_2";
             PreparedStatement psDelete = con.prepareStatement(delete);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
 
-            String insert = " insert into tdp_catalog_2 " +
+            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_2 " +
                     " (codigoproducto," +
                     "commercialoperation," +
                     "segmento," +
