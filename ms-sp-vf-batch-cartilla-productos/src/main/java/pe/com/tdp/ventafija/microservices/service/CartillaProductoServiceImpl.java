@@ -255,27 +255,41 @@ public class CartillaProductoServiceImpl {
             String provincias = invent.getProvincia().replace("ñ", "n");
             String distrito = invent.getDistrito().replace("ñ", "n");
 
+            logger.info("canales = " + caneles);
+            logger.info("entidades = " + entidades);
+            logger.info("campanas = " + campanas);
+            logger.info("provincias = " + provincias);
+            logger.info("distrito = " + distrito);
+
             listCaneles = Arrays.asList(caneles.split("-"));
             listEntidades = Arrays.asList(entidades.split("-"));
             listCampanas = Arrays.asList(campanas.split("-"));
             listProvincias = Arrays.asList(provincias.split("-"));
             listDistrito = Arrays.asList(distrito.split("-"));
 
+            logger.info("listCaneles = " + listCaneles.toString());
+            logger.info("listEntidades = " + listEntidades.toString());
+            logger.info("listCampanas = " + listCampanas.toString());
+            logger.info("listProvincias = " + listProvincias.toString());
+            logger.info("listDistrito = " + listDistrito.toString());
+
             int indiceUbicacion = 0;
             for (String prov: listProvincias) {
+                logger.info("prov = " + prov);
                 if (distrito.equals("-")){
                     ubicaciones.add(prov + "-todo");
                 }else{
                     if(listDistrito.get(indiceUbicacion) !=null
                     && !listDistrito.get(indiceUbicacion).isEmpty()){
                         List<String> distritosPorProvincia = Arrays.asList(listDistrito.get(indiceUbicacion).split("-"));
+                        logger.info("distritosPorProvincia = " + distritosPorProvincia.toString());
                         indiceUbicacion++;
                         for (String distritoPorProvincia: distritosPorProvincia ) {
                             ubicaciones.add(prov.trim() + "-" + distritoPorProvincia.trim());
                         }
                     }
                 }
-
+                logger.info("ubicaciones = " + ubicaciones.toString());
             }
 
 
@@ -283,8 +297,7 @@ public class CartillaProductoServiceImpl {
             addAditionalData(invent, "6528", listEntidades, fileNameTxt);
             addAditionalData(invent, "6529", ubicaciones, fileNameTxt);
             addAditionalData(invent, "6530", listCampanas, fileNameTxt);
-
-
+            logger.info("outsCatalogAditional = " + outsCatalogAditional.toString());
 
         }
 
@@ -296,8 +309,8 @@ public class CartillaProductoServiceImpl {
 
         for (String obj:lista) {
             TdpCatalogAditionalData model = new TdpCatalogAditionalData();
-            model.setProductId(invent.getProdtypecode());
-            model.setParameterId(additionalCode);
+            model.setProductId(Integer.parseInt(invent.getProdtypecode()));
+            model.setParameterId(Integer.parseInt(additionalCode));
             model.setValue(obj.trim().toUpperCase());
             model.setHerramienta(fileNameTxt);
             outsCatalogAditional.add(model);

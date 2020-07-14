@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TdpCatalogAditionalData {
-    private String productId;
-    private String parameterId;
+    private int productId;
+    private int parameterId;
     private String value;
     private String herramienta;
 
