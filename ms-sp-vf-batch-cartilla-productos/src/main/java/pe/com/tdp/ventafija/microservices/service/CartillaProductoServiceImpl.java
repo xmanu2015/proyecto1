@@ -48,7 +48,7 @@ public class CartillaProductoServiceImpl {
 
     //@Scheduled(cron = "${carga.cartilla.productosMT.api.sync.cron}")
     @Scheduled(cron = "*/30 * * * * *")
-    public void loadFileOut() {
+    public void loadFileOutMT() {
         if (!syncEnabled) {
             logger.info("Carga del archivo para cartilla de productos Movistar Total no habilitada");
             return;
@@ -61,9 +61,9 @@ public class CartillaProductoServiceImpl {
         List<String> filesToProcess = azureService.listFiles(azureConnectionReplaceSftp);
         logger.info(String.format("listado de archivos del container storage en %s minutos", ((double) ((new Date()).getTime() - ahoramilisecs)) / 60000));
         ahoramilisecs = new Date().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMyyyy");
         sdf.setTimeZone(TimeZone.getTimeZone("America/Lima"));
-        String actualMonth = "CARTILLA_PRINCIPAL_MT_" + sdf.format(new Date());
+        String actualMonth = "CARTILLA_PRINCIPAL_MT_";
 
         for (String nameFile : filesToProcess) {
             if (nameFile != null && nameFile.startsWith(actualMonth)) {
