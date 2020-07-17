@@ -212,6 +212,7 @@ public class CartillaProductoServiceImpl {
             model.setMigratevoiptovoip(normalizeUsingJavaText(StringUtils.trim(out[52])));
             model.setHfctoftthmigrationlogic(normalizeUsingJavaText(StringUtils.trim(out[53])));
             model.setHerramienta(fileNameTxt);
+            model.setLinearegistro(count);
 
             outsCatalog.add(model);
         }
@@ -292,7 +293,7 @@ public class CartillaProductoServiceImpl {
 
         for (String obj:lista) {
             TdpCatalogAditionalData model = new TdpCatalogAditionalData();
-            model.setProductId(Integer.parseInt(invent.getCodigoproducto()));
+            model.setProductId(invent.getLinearegistro());
             model.setParameterId(Integer.parseInt(additionalCode));
             model.setValue(obj.trim().toUpperCase());
             model.setHerramienta(fileNameTxt);

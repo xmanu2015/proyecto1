@@ -63,6 +63,7 @@ public class TdpCatalogData {
     private String migratevoiptovoip;
     private String hfctoftthmigrationlogic;
     private String herramienta;
+    private Integer linearegistro;
 
     public TdpCatalogData() {
 

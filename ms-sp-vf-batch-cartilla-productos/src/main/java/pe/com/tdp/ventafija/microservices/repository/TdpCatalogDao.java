@@ -26,7 +26,7 @@ public class TdpCatalogDao {
         int totalOrderUpdate = 0;
 
         try (Connection con = Database.datasource().getConnection()) {
-            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog";
+            String delete = "DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog";
             PreparedStatement psDelete = con.prepareStatement(delete);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
@@ -86,8 +86,9 @@ public class TdpCatalogDao {
                     "migrationlogicfromtdmtovoip," +
                     "migratevoiptovoip," +
                     "hfctoftthmigrationlogic," +
-                    "herramienta)" +
-                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "herramienta," +
+                    "linearegistro)" +
+                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             PreparedStatement psInsert = con.prepareStatement(insert);
             logger.info("numero de registros a procesar: "+ invents.size());
@@ -155,6 +156,7 @@ public class TdpCatalogDao {
                 psInsert.setString(53, invent.getMigratevoiptovoip());
                 psInsert.setString(54, invent.getHfctoftthmigrationlogic());
                 psInsert.setString(55, invent.getHerramienta());
+                psInsert.setInt(56, invent.getLinearegistro());
                 psInsert.addBatch();
 
                 countBatch++;
