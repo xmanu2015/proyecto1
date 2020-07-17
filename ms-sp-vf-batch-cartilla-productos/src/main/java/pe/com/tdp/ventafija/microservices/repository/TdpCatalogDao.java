@@ -26,14 +26,13 @@ public class TdpCatalogDao {
         int totalOrderUpdate = 0;
 
         try (Connection con = Database.datasource().getConnection()) {
-            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog_2";
+            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog";
             PreparedStatement psDelete = con.prepareStatement(delete);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
 
-            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_2 " +
-                    " (codigoproducto," +
-                    "commercialoperation," +
+            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog " +
+                    "(commercialoperation," +
                     "segmento," +
                     "canal," +
                     "entidad," +
@@ -74,6 +73,7 @@ public class TdpCatalogDao {
                     "equiplinea," +
                     "equipinternet," +
                     "equiptv," +
+                    "product_codigo," +
                     "origintvtechnology," +
                     "typetypedecoorigin," +
                     "typedecoorigin," +
@@ -100,48 +100,48 @@ public class TdpCatalogDao {
 
             for (TdpCatalogData invent : invents) {
 
-                psInsert.setString(1, invent.getCodigoproducto());
-                psInsert.setString(2, invent.getCommercialoperation());
-                psInsert.setString(3, invent.getSegmento());
-                psInsert.setString(4, invent.getCanal());
-                psInsert.setString(5, invent.getEntidad());
-                psInsert.setString(6, invent.getProvincia());
-                psInsert.setString(7, invent.getDistrito());
-                psInsert.setString(8, invent.getCampaign());
-                psInsert.setString(9, invent.getCampaingcode());
-                psInsert.setString(10, invent.getPriority());
-                psInsert.setString(11, invent.getProdtypecode());
-                psInsert.setString(12, invent.getProdcategorycode());
-                psInsert.setString(13, invent.getProducttype());
-                psInsert.setString(14, invent.getProductcategory());
-                psInsert.setString(15, invent.getProductcode());
-                psInsert.setString(16, invent.getProductname());
-                psInsert.setString(17, invent.getBloquetv());
-                psInsert.setString(18, invent.getSvainternet());
-                psInsert.setString(19, invent.getSvalinea());
-                psInsert.setString(20, invent.getTiporegistro());
-                psInsert.setString(21, invent.getDiscount());
-                psInsert.setString(22, invent.getPrice());
-                psInsert.setString(23, invent.getPromprice());
-                psInsert.setString(24, invent.getMonthperiod());
-                psInsert.setString(25, invent.getInstallcost());
-                psInsert.setString(26, invent.getLinetype());
-                psInsert.setString(27, invent.getPaymentmethod());
-                psInsert.setString(28, invent.getCashprice());
-                psInsert.setString(29, invent.getFinancingcost());
-                psInsert.setString(30, invent.getFinancingmonth());
-                psInsert.setString(31, invent.getEquipmenttype());
-                psInsert.setString(32, invent.getReturnmonth());
-                psInsert.setString(33, invent.getReturnperiod());
-                psInsert.setString(34, invent.getInternetspeed());
-                psInsert.setString(35, invent.getPromspeed());
-                psInsert.setString(36, invent.getPeriodpromspeed());
-                psInsert.setString(37, invent.getInternettech());
-                psInsert.setString(38, invent.getTvsignal());
-                psInsert.setString(39, invent.getTvtech());
-                psInsert.setString(40, invent.getEquiplinea());
-                psInsert.setString(41, invent.getEquipinternet());
-                psInsert.setString(42, invent.getEquiptv());
+                psInsert.setString(1, invent.getCommercialoperation());
+                psInsert.setString(2, invent.getSegmento());
+                psInsert.setString(3, invent.getCanal());
+                psInsert.setString(4, invent.getEntidad());
+                psInsert.setString(5, invent.getProvincia());
+                psInsert.setString(6, invent.getDistrito());
+                psInsert.setString(7, invent.getCampaign());
+                psInsert.setString(8, invent.getCampaingcode());
+                psInsert.setInt(9, invent.getPriority());
+                psInsert.setString(10, invent.getProdtypecode());
+                psInsert.setString(11, invent.getProdcategorycode());
+                psInsert.setString(12, invent.getProducttype());
+                psInsert.setString(13, invent.getProductcategory());
+                psInsert.setString(14, invent.getProductcode());
+                psInsert.setString(15, invent.getProductname());
+                psInsert.setString(16, invent.getBloquetv());
+                psInsert.setString(17, invent.getSvainternet());
+                psInsert.setString(18, invent.getSvalinea());
+                psInsert.setString(19, invent.getTiporegistro());
+                psInsert.setString(20, invent.getDiscount());
+                psInsert.setDouble(21, invent.getPrice());
+                psInsert.setDouble(22, invent.getPromprice());
+                psInsert.setInt(23, invent.getMonthperiod());
+                psInsert.setDouble(24, invent.getInstallcost());
+                psInsert.setString(25, invent.getLinetype());
+                psInsert.setString(26, invent.getPaymentmethod());
+                psInsert.setDouble(27, invent.getCashprice());
+                psInsert.setDouble(28, invent.getFinancingcost());
+                psInsert.setInt(29, invent.getFinancingmonth());
+                psInsert.setString(30, invent.getEquipmenttype());
+                psInsert.setInt(31, invent.getReturnmonth());
+                psInsert.setString(32, invent.getReturnperiod());
+                psInsert.setInt(33, invent.getInternetspeed());
+                psInsert.setInt(34, invent.getPromspeed());
+                psInsert.setInt(35, invent.getPeriodpromspeed());
+                psInsert.setString(36, invent.getInternettech());
+                psInsert.setString(37, invent.getTvsignal());
+                psInsert.setString(38, invent.getTvtech());
+                psInsert.setString(39, invent.getEquiplinea());
+                psInsert.setString(40, invent.getEquipinternet());
+                psInsert.setString(41, invent.getEquiptv());
+                psInsert.setString(42, invent.getCodigoproducto());
                 psInsert.setString(43, invent.getOrigintvtechnology());
                 psInsert.setString(44, invent.getTypetypedecoorigin());
                 psInsert.setString(45, invent.getTypedecoorigin());

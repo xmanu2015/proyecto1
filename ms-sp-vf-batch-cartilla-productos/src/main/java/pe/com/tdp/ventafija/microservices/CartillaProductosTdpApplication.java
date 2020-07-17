@@ -23,7 +23,7 @@ import java.util.Properties;
 @EnableScheduling
 public class CartillaProductosTdpApplication {
     private static final Logger logger = LogManager.getLogger();
-    private static final String EQUIPMENT_STOREHOUSE_SERVICE_CODE = "EquipmentStorehouse";
+    private static final String CARTILLA_PRODUCTO_SERVICE_CODE = "CartillaProductosMT";
 
     @Bean
     public Filter log4jMvcFilter() {
@@ -32,7 +32,7 @@ public class CartillaProductosTdpApplication {
 
     @Bean
     public Filter ventaFijaContextPersistenceFilter() {
-        return new VentaFijaContextPersistenceFilter(EQUIPMENT_STOREHOUSE_SERVICE_CODE);
+        return new VentaFijaContextPersistenceFilter(CARTILLA_PRODUCTO_SERVICE_CODE);
     }
 
     @Bean

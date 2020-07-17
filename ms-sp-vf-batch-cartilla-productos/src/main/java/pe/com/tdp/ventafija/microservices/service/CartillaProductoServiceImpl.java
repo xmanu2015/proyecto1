@@ -165,7 +165,7 @@ public class CartillaProductoServiceImpl {
             model.setDistrito(StringUtils.trim(out[6]));
             model.setCampaign(StringUtils.trim(out[7]));
             model.setCampaingcode(StringUtils.trim(out[8]));
-            model.setPriority(StringUtils.trim(out[9]));
+            model.setPriority(Integer.parseInt(StringUtils.trim(out[9])));
             model.setProdtypecode(StringUtils.trim(out[10]));
             model.setProdcategorycode(StringUtils.trim(out[11]));
             model.setProducttype(StringUtils.trim(out[12]));
@@ -177,21 +177,21 @@ public class CartillaProductoServiceImpl {
             model.setSvalinea(StringUtils.trim(out[18]));
             model.setTiporegistro(StringUtils.trim(out[19]));
             model.setDiscount(StringUtils.trim(out[20]));
-            model.setPrice(StringUtils.trim(out[21]));
-            model.setPromprice(StringUtils.trim(out[22]));
-            model.setMonthperiod(StringUtils.trim(out[23]));
-            model.setInstallcost(StringUtils.trim(out[24]));
+            model.setPrice(Double.parseDouble(StringUtils.trim(out[21])));
+            model.setPromprice(Double.parseDouble(StringUtils.trim(out[22])));
+            model.setMonthperiod(Integer.parseInt(StringUtils.trim(out[23])));
+            model.setInstallcost(Double.parseDouble(StringUtils.trim(out[24])));
             model.setLinetype(StringUtils.trim(out[25]));
             model.setPaymentmethod(StringUtils.trim(out[26]));
-            model.setCashprice(StringUtils.trim(out[27]));
-            model.setFinancingcost(StringUtils.trim(out[28]));
-            model.setFinancingmonth(StringUtils.trim(out[29]));
+            model.setCashprice(Double.parseDouble(StringUtils.trim(out[27])));
+            model.setFinancingcost(Double.parseDouble(StringUtils.trim(out[28])));
+            model.setFinancingmonth(Integer.parseInt(StringUtils.trim(out[29])));
             model.setEquipmenttype(StringUtils.trim(out[30]));
-            model.setReturnmonth(StringUtils.trim(out[31]));
+            model.setReturnmonth(Integer.parseInt(StringUtils.trim(out[31])));
             model.setReturnperiod(StringUtils.trim(out[32]));
-            model.setInternetspeed(StringUtils.trim(out[33]));
-            model.setPromspeed(StringUtils.trim(out[34]));
-            model.setPeriodpromspeed(StringUtils.trim(out[35]));
+            model.setInternetspeed(Integer.parseInt(StringUtils.trim(out[33])));
+            model.setPromspeed(Integer.parseInt(StringUtils.trim(out[34])));
+            model.setPeriodpromspeed(Integer.parseInt(StringUtils.trim(out[35])));
             model.setInternettech(StringUtils.trim(out[36]));
             model.setTvsignal(StringUtils.trim(out[37]));
             model.setTvtech(StringUtils.trim(out[38]));
@@ -256,11 +256,11 @@ public class CartillaProductoServiceImpl {
             String provincias = invent.getProvincia().replace("ñ", "n");
             String distrito = invent.getDistrito().replace("ñ", "n");
 
-            logger.info("canales = " + caneles);
-            logger.info("entidades = " + entidades);
-            logger.info("campanas = " + campanas);
-            logger.info("provincias = " + provincias);
-            logger.info("distrito = " + distrito);
+//            logger.info("canales = " + caneles);
+//            logger.info("entidades = " + entidades);
+//            logger.info("campanas = " + campanas);
+//            logger.info("provincias = " + provincias);
+//            logger.info("distrito = " + distrito);
 
             listCaneles = Arrays.asList(caneles.split("-"));
             listEntidades = Arrays.asList(entidades.split("-"));
@@ -268,22 +268,22 @@ public class CartillaProductoServiceImpl {
             listProvincias = Arrays.asList(provincias.split("-"));
             listDistrito = Arrays.asList(distrito.split("-"));
 
-            logger.info("listCaneles = " + listCaneles.toString());
-            logger.info("listEntidades = " + listEntidades.toString());
-            logger.info("listCampanas = " + listCampanas.toString());
-            logger.info("listProvincias = " + listProvincias.toString());
-            logger.info("listDistrito = " + listDistrito.toString());
+//            logger.info("listCaneles = " + listCaneles.toString());
+//            logger.info("listEntidades = " + listEntidades.toString());
+//            logger.info("listCampanas = " + listCampanas.toString());
+//            logger.info("listProvincias = " + listProvincias.toString());
+//            logger.info("listDistrito = " + listDistrito.toString());
 
             int indiceUbicacion = 0;
             for (String prov: listProvincias) {
-                logger.info("prov = " + prov);
+                //logger.info("prov = " + prov);
                 if (distrito.equals("-")){
                     ubicaciones.add(prov + "-todo");
                 }else{
                     if(listDistrito.get(indiceUbicacion) !=null
                     && !listDistrito.get(indiceUbicacion).isEmpty()){
                         List<String> distritosPorProvincia = Arrays.asList(listDistrito.get(indiceUbicacion).split("-"));
-                        logger.info("distritosPorProvincia = " + distritosPorProvincia.toString());
+                        //logger.info("distritosPorProvincia = " + distritosPorProvincia.toString());
                         indiceUbicacion++;
                         for (String distritoPorProvincia: distritosPorProvincia ) {
                             ubicaciones.add(prov.trim() + "-" + distritoPorProvincia.trim());
@@ -310,7 +310,7 @@ public class CartillaProductoServiceImpl {
 
         for (String obj:lista) {
             TdpCatalogAditionalData model = new TdpCatalogAditionalData();
-            model.setProductId(Integer.parseInt(invent.getProdtypecode()));
+            model.setProductId(Integer.parseInt(invent.getCodigoproducto()));
             model.setParameterId(Integer.parseInt(additionalCode));
             model.setValue(obj.trim().toUpperCase());
             model.setHerramienta(fileNameTxt);
