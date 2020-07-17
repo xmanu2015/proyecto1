@@ -64,6 +64,9 @@ public class TdpCatalogAditionalDao {
                     psInsert.clearBatch();
                     countBatch = 0;
                 }
+
+                logger.info("Resultado: " + invent.getProductId() + " : " + invent.getParameterId() + " : " + invent.getValue());
+
             }
 
             if (countBatch > 0) {

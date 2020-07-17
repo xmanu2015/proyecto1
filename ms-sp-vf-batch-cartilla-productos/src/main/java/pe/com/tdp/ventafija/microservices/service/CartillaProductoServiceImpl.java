@@ -17,9 +17,10 @@ import pe.com.tdp.ventafija.microservices.repository.TdpCatalogAditionalDao;
 import pe.com.tdp.ventafija.microservices.repository.TdpCatalogDao;
 import pe.com.tdp.ventafija.microservices.repository.TdpCatalogRepository;
 import pe.com.tdp.ventafija.microservices.util.StringUtils;
-
+import org.apache.commons.lang3.StringUtils.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -156,60 +157,60 @@ public class CartillaProductoServiceImpl {
             }
 
             TdpCatalogData model = new TdpCatalogData();
-            model.setCodigoproducto(StringUtils.trim(out[0]));
-            model.setCommercialoperation(StringUtils.trim(out[1]));
-            model.setSegmento(StringUtils.trim(out[2]));
-            model.setCanal(StringUtils.trim(out[3]));
-            model.setEntidad(StringUtils.trim(out[4]));
-            model.setProvincia(StringUtils.trim(out[5]));
-            model.setDistrito(StringUtils.trim(out[6]));
-            model.setCampaign(StringUtils.trim(out[7]));
-            model.setCampaingcode(StringUtils.trim(out[8]));
-            model.setPriority(Integer.parseInt(StringUtils.trim(out[9])));
-            model.setProdtypecode(StringUtils.trim(out[10]));
-            model.setProdcategorycode(StringUtils.trim(out[11]));
-            model.setProducttype(StringUtils.trim(out[12]));
-            model.setProductcategory(StringUtils.trim(out[13]));
-            model.setProductcode(StringUtils.trim(out[14]));
-            model.setProductname(StringUtils.trim(out[15]));
-            model.setBloquetv(StringUtils.trim(out[16]));
-            model.setSvainternet(StringUtils.trim(out[17]));
-            model.setSvalinea(StringUtils.trim(out[18]));
-            model.setTiporegistro(StringUtils.trim(out[19]));
-            model.setDiscount(StringUtils.trim(out[20]));
+            model.setCodigoproducto(normalizeUsingJavaText(StringUtils.trim(out[0])));
+            model.setCommercialoperation(normalizeUsingJavaText(StringUtils.trim(out[1])));
+            model.setSegmento(normalizeUsingJavaText(StringUtils.trim(out[2])));
+            model.setCanal(normalizeUsingJavaText(StringUtils.trim(out[3])));
+            model.setEntidad(normalizeUsingJavaText(StringUtils.trim(out[4])));
+            model.setProvincia(normalizeUsingJavaText(StringUtils.trim((out[5]))));
+            model.setDistrito(normalizeUsingJavaText(StringUtils.trim((out[6]))));
+            model.setCampaign(normalizeUsingJavaText(StringUtils.trim(out[7])));
+            model.setCampaingcode(normalizeUsingJavaText(StringUtils.trim(out[8])));
+            model.setPriority(Integer.parseInt(normalizeUsingJavaText(StringUtils.trim(out[9]))));
+            model.setProdtypecode(normalizeUsingJavaText(StringUtils.trim(out[10])));
+            model.setProdcategorycode(normalizeUsingJavaText(StringUtils.trim(out[11])));
+            model.setProducttype(normalizeUsingJavaText(StringUtils.trim(out[12])));
+            model.setProductcategory(normalizeUsingJavaText(StringUtils.trim(out[13])));
+            model.setProductcode(normalizeUsingJavaText(StringUtils.trim(out[14])));
+            model.setProductname(normalizeUsingJavaText(StringUtils.trim(out[15])));
+            model.setBloquetv(normalizeUsingJavaText(StringUtils.trim(out[16])));
+            model.setSvainternet(normalizeUsingJavaText(StringUtils.trim(out[17])));
+            model.setSvalinea(normalizeUsingJavaText(StringUtils.trim(out[18])));
+            model.setTiporegistro(normalizeUsingJavaText(StringUtils.trim(out[19])));
+            model.setDiscount(normalizeUsingJavaText(StringUtils.trim(out[20])));
             model.setPrice(Double.parseDouble(StringUtils.trim(out[21])));
             model.setPromprice(Double.parseDouble(StringUtils.trim(out[22])));
             model.setMonthperiod(Integer.parseInt(StringUtils.trim(out[23])));
             model.setInstallcost(Double.parseDouble(StringUtils.trim(out[24])));
-            model.setLinetype(StringUtils.trim(out[25]));
-            model.setPaymentmethod(StringUtils.trim(out[26]));
+            model.setLinetype(normalizeUsingJavaText(StringUtils.trim(out[25])));
+            model.setPaymentmethod(normalizeUsingJavaText(StringUtils.trim(out[26])));
             model.setCashprice(Double.parseDouble(StringUtils.trim(out[27])));
             model.setFinancingcost(Double.parseDouble(StringUtils.trim(out[28])));
             model.setFinancingmonth(Integer.parseInt(StringUtils.trim(out[29])));
-            model.setEquipmenttype(StringUtils.trim(out[30]));
+            model.setEquipmenttype(normalizeUsingJavaText(StringUtils.trim(out[30])));
             model.setReturnmonth(Integer.parseInt(StringUtils.trim(out[31])));
-            model.setReturnperiod(StringUtils.trim(out[32]));
+            model.setReturnperiod(normalizeUsingJavaText(StringUtils.trim(out[32])));
             model.setInternetspeed(Integer.parseInt(StringUtils.trim(out[33])));
             model.setPromspeed(Integer.parseInt(StringUtils.trim(out[34])));
             model.setPeriodpromspeed(Integer.parseInt(StringUtils.trim(out[35])));
-            model.setInternettech(StringUtils.trim(out[36]));
-            model.setTvsignal(StringUtils.trim(out[37]));
-            model.setTvtech(StringUtils.trim(out[38]));
-            model.setEquiplinea(StringUtils.trim(out[39]));
-            model.setEquipinternet(StringUtils.trim(out[40]));
-            model.setEquiptv(StringUtils.trim(out[41]));
-            model.setOrigintvtechnology(StringUtils.trim(out[42]));
-            model.setTypetypedecoorigin(StringUtils.trim(out[43]));
-            model.setTypedecoorigin(StringUtils.trim(out[44]));
-            model.setQuantitytypedeco(StringUtils.trim(out[45]));
-            model.setInternettechnologyorigin(StringUtils.trim(out[46]));
-            model.setInternetequipmentorigin(StringUtils.trim(out[47]));
-            model.setComfortcomfortrepeaterequipment(StringUtils.trim(out[48]));
-            model.setComfortrepeater(StringUtils.trim(out[49]));
-            model.setVoicetechnology(StringUtils.trim(out[50]));
-            model.setMigrationlogicfromtdmtovoip(StringUtils.trim(out[51]));
-            model.setMigratevoiptovoip(StringUtils.trim(out[52]));
-            model.setHfctoftthmigrationlogic(StringUtils.trim(out[53]));
+            model.setInternettech(normalizeUsingJavaText(StringUtils.trim(out[36])));
+            model.setTvsignal(normalizeUsingJavaText(StringUtils.trim(out[37])));
+            model.setTvtech(normalizeUsingJavaText(StringUtils.trim(out[38])));
+            model.setEquiplinea(normalizeUsingJavaText(StringUtils.trim(out[39])));
+            model.setEquipinternet(normalizeUsingJavaText(StringUtils.trim(out[40])));
+            model.setEquiptv(normalizeUsingJavaText(StringUtils.trim(out[41])));
+            model.setOrigintvtechnology(normalizeUsingJavaText(StringUtils.trim(out[42])));
+            model.setTypetypedecoorigin(normalizeUsingJavaText(StringUtils.trim(out[43])));
+            model.setTypedecoorigin(normalizeUsingJavaText(StringUtils.trim(out[44])));
+            model.setQuantitytypedeco(normalizeUsingJavaText(StringUtils.trim(out[45])));
+            model.setInternettechnologyorigin(normalizeUsingJavaText(StringUtils.trim(out[46])));
+            model.setInternetequipmentorigin(normalizeUsingJavaText(StringUtils.trim(out[47])));
+            model.setComfortcomfortrepeaterequipment(normalizeUsingJavaText(StringUtils.trim(out[48])));
+            model.setComfortrepeater(normalizeUsingJavaText(StringUtils.trim(out[49])));
+            model.setVoicetechnology(normalizeUsingJavaText(StringUtils.trim(out[50])));
+            model.setMigrationlogicfromtdmtovoip(normalizeUsingJavaText(StringUtils.trim(out[51])));
+            model.setMigratevoiptovoip(normalizeUsingJavaText(StringUtils.trim(out[52])));
+            model.setHfctoftthmigrationlogic(normalizeUsingJavaText(StringUtils.trim(out[53])));
             model.setHerramienta(fileNameTxt);
 
             outsCatalog.add(model);
@@ -256,54 +257,35 @@ public class CartillaProductoServiceImpl {
             String provincias = invent.getProvincia().replace("ñ", "n");
             String distrito = invent.getDistrito().replace("ñ", "n");
 
-//            logger.info("canales = " + caneles);
-//            logger.info("entidades = " + entidades);
-//            logger.info("campanas = " + campanas);
-//            logger.info("provincias = " + provincias);
-//            logger.info("distrito = " + distrito);
-
             listCaneles = Arrays.asList(caneles.split("-"));
             listEntidades = Arrays.asList(entidades.split("-"));
             listCampanas = Arrays.asList(campanas.split("-"));
             listProvincias = Arrays.asList(provincias.split("-"));
             listDistrito = Arrays.asList(distrito.split("-"));
 
-//            logger.info("listCaneles = " + listCaneles.toString());
-//            logger.info("listEntidades = " + listEntidades.toString());
-//            logger.info("listCampanas = " + listCampanas.toString());
-//            logger.info("listProvincias = " + listProvincias.toString());
-//            logger.info("listDistrito = " + listDistrito.toString());
-
             int indiceUbicacion = 0;
             for (String prov: listProvincias) {
-                //logger.info("prov = " + prov);
                 if (distrito.equals("-")){
                     ubicaciones.add(prov + "-todo");
                 }else{
                     if(listDistrito.get(indiceUbicacion) !=null
                     && !listDistrito.get(indiceUbicacion).isEmpty()){
                         List<String> distritosPorProvincia = Arrays.asList(listDistrito.get(indiceUbicacion).split("-"));
-                        //logger.info("distritosPorProvincia = " + distritosPorProvincia.toString());
                         indiceUbicacion++;
                         for (String distritoPorProvincia: distritosPorProvincia ) {
                             ubicaciones.add(prov.trim() + "-" + distritoPorProvincia.trim());
                         }
                     }
                 }
-                logger.info("ubicaciones = " + ubicaciones.toString());
             }
-
-
             addAditionalData(invent, "6527", listCaneles, fileNameTxt);
             addAditionalData(invent, "6528", listEntidades, fileNameTxt);
             addAditionalData(invent, "6529", ubicaciones, fileNameTxt);
             addAditionalData(invent, "6530", listCampanas, fileNameTxt);
-            logger.info("outsCatalogAditional = " + outsCatalogAditional.toString());
 
         }
-
-        InventResult resultCatalogCatalogAditional = tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
-
+        //InventResult resultCatalogCatalogAditional = tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
+        tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
     }
 
     private void addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt) {
@@ -318,5 +300,8 @@ public class CartillaProductoServiceImpl {
         }
     }
 
-
+    private static String normalizeUsingJavaText(String source){
+        source = Normalizer.normalize(source, Normalizer.Form.NFD);
+        return source.replaceAll("[^\\p{ASCII}]", "");
+    }
 }
