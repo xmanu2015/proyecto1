@@ -80,8 +80,7 @@ dependencies {
 	compile 'com.jcraft:jsch:0.1.48'
 	compile 'org.postgresql:postgresql:42.2.10'
 	compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector:2.0.0.RELEASE'
-
-    //compile 'pe.com.tdp.ventafija.microservices.common:common-services:2.0.5-RELEASE'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 }
 
 test {

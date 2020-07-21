@@ -18,7 +18,7 @@ import java.util.TimeZone;
 public class TdpCatalogAditionalDao {
     private static final Logger logger = LogManager.getLogger();
 
-    public InventResult CatalogAditional(List<TdpCatalogAditionalData> invents, String fileNameTxt) throws Exception {
+    public InventResult CatalogAditional(List<TdpCatalogAditionalData> invents, String fileNameTxt , String prefix) throws Exception {
         logger.info("iniciando registro en tdp_catalog_aditional para Movistar Total");
 
         int totalInsert = 0;
@@ -27,17 +27,19 @@ public class TdpCatalogAditionalDao {
         int totalOrderUpdate = 0;
 
         try (Connection con = Database.datasource().getConnection()) {
-            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog_aditional";
+            String delete = " DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog_aditional_2 WHERE prefijo = ?";
             PreparedStatement psDelete = con.prepareStatement(delete);
+            psDelete.setString(1, prefix);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
 
-            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_aditional" +
+            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_aditional_2" +
                     " (product_id," +
                     "parameter_id," +
                     "value," +
-                    "herramienta) " +
-                    " values (?,?,?,?)";
+                    "herramienta," +
+                    "prefijo) " +
+                    " values (?,?,?,?,?)";
 
             PreparedStatement psInsert = con.prepareStatement(insert);
             logger.info("numero de registros a procesar: "+ invents.size());
@@ -54,6 +56,7 @@ public class TdpCatalogAditionalDao {
                 psInsert.setInt(2, invent.getParameterId());
                 psInsert.setString(3, invent.getValue());
                 psInsert.setString(4, invent.getHerramienta());
+                psInsert.setString(5, invent.getPrefijo());
                 psInsert.addBatch();
 
                 countBatch++;
@@ -65,7 +68,7 @@ public class TdpCatalogAditionalDao {
                     countBatch = 0;
                 }
 
-                logger.info("Resultado: " + invent.getProductId() + " : " + invent.getParameterId() + " : " + invent.getValue());
+                //logger.info("Resultado: " + invent.getProductId() + " : " + invent.getParameterId() + " : " + invent.getValue());
 
             }
 

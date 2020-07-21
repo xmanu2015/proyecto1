@@ -12,6 +12,7 @@ public class TdpCatalogAditionalData {
     private Integer parameterId;
     private String value;
     private String herramienta;
+    private String prefijo;
 
     public TdpCatalogAditionalData() {
 

@@ -1,11 +1,15 @@
 package pe.com.tdp.ventafija.microservices.repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pe.com.tdp.ventafija.microservices.common.connection.Database;
 import pe.com.tdp.ventafija.microservices.common.util.exception.Exception;
 import pe.com.tdp.ventafija.microservices.domain.TdpCatalogData;
 import pe.com.tdp.ventafija.microservices.domain.dto.InventResult;
+import pe.com.tdp.ventafija.microservices.domain.dto.ServiceCallEvent;
+import pe.com.tdp.ventafija.microservices.service.AzureService;
+import pe.com.tdp.ventafija.microservices.service.CartillaProductoServiceImpl;
 
 import java.sql.*;
 import java.util.Calendar;
@@ -17,7 +21,7 @@ import java.util.TimeZone;
 public class TdpCatalogDao {
     private static final Logger logger = LogManager.getLogger();
 
-    public InventResult cartillaProudctosMT(List<TdpCatalogData> invents, String fileNameTxt) throws Exception {
+    public InventResult cartillaProudctosMT(List<TdpCatalogData> invents, String fileNameTxt, String prefix) throws Exception {
         logger.info("iniciando registro en tdp_catalog para Movistar Total");
 
         int totalInsert = 0;
@@ -26,12 +30,13 @@ public class TdpCatalogDao {
         int totalOrderUpdate = 0;
 
         try (Connection con = Database.datasource().getConnection()) {
-            String delete = "DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog";
+            String delete = "DELETE FROM ibmx_a07e6d02edaf552.tdp_catalog_2 WHERE prefijo = ?";
             PreparedStatement psDelete = con.prepareStatement(delete);
+            psDelete.setString(1,prefix);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
 
-            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog " +
+            String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_2 " +
                     "(commercialoperation," +
                     "segmento," +
                     "canal," +
@@ -87,8 +92,9 @@ public class TdpCatalogDao {
                     "migratevoiptovoip," +
                     "hfctoftthmigrationlogic," +
                     "herramienta," +
-                    "linearegistro)" +
-                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "linearegistro," +
+                    "prefijo)" +
+                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             PreparedStatement psInsert = con.prepareStatement(insert);
             logger.info("numero de registros a procesar: "+ invents.size());
@@ -157,6 +163,7 @@ public class TdpCatalogDao {
                 psInsert.setString(54, invent.getHfctoftthmigrationlogic());
                 psInsert.setString(55, invent.getHerramienta());
                 psInsert.setInt(56, invent.getLinearegistro());
+                psInsert.setString(57, invent.getPrefijo());
                 psInsert.addBatch();
 
                 countBatch++;

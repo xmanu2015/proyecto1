@@ -1,11 +1,13 @@
 package pe.com.tdp.ventafija.microservices.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pe.com.tdp.ventafija.microservices.common.util.Constants;
 import pe.com.tdp.ventafija.microservices.common.util.exception.ApplicationException;
 import pe.com.tdp.ventafija.microservices.common.util.exception.Exception;
 import pe.com.tdp.ventafija.microservices.domain.Response;
@@ -13,11 +15,11 @@ import pe.com.tdp.ventafija.microservices.domain.TdpCatalogAditionalData;
 import pe.com.tdp.ventafija.microservices.domain.TdpCatalogData;
 import pe.com.tdp.ventafija.microservices.domain.dto.InventResult;
 import pe.com.tdp.ventafija.microservices.domain.dto.InventSyntaxError;
+import pe.com.tdp.ventafija.microservices.domain.dto.ServiceCallEvent;
+import pe.com.tdp.ventafija.microservices.repository.ServiceCallEventsDao;
 import pe.com.tdp.ventafija.microservices.repository.TdpCatalogAditionalDao;
 import pe.com.tdp.ventafija.microservices.repository.TdpCatalogDao;
-import pe.com.tdp.ventafija.microservices.repository.TdpCatalogRepository;
-import pe.com.tdp.ventafija.microservices.util.StringUtils;
-import org.apache.commons.lang3.StringUtils.*;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -28,12 +30,14 @@ import java.util.regex.Pattern;
 @Service
 public class CartillaProductoServiceImpl {
     private static final Logger logger = LogManager.getLogger();
-    @Autowired
-    private TdpCatalogRepository tdpCatalogRepository;
+
     @Autowired
     private TdpCatalogDao tdpCatalogDao;
     @Autowired
     private TdpCatalogAditionalDao tdpCatalogAditionalDao;
+    @Autowired
+    private ServiceCallEventsDao serviceCallEventsDao;
+
     @Autowired
     private AzureService azureService;
 
@@ -50,35 +54,62 @@ public class CartillaProductoServiceImpl {
     @Scheduled(cron = "*/30 * * * * *")
     public void loadFileOutMT() {
         if (!syncEnabled) {
-            logger.info("Carga del archivo para cartilla de productos Movistar Total no habilitada");
+            logger.info("Carga del archivo para cartilla de productos MT no habilitada");
             return;
         }
 
         Date ahora = new Date();
         long ahoramilisecs = ahora.getTime();
         logger.info("iniciando carga de cartilla de productos Movistar Total " + ahora + " .....");
-        //tdpCatalogRepository.deleteAll();
         List<String> filesToProcess = azureService.listFiles(azureConnectionReplaceSftp);
         logger.info(String.format("listado de archivos del container storage en %s minutos", ((double) ((new Date()).getTime() - ahoramilisecs)) / 60000));
         ahoramilisecs = new Date().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("MMyyyy");
         sdf.setTimeZone(TimeZone.getTimeZone("America/Lima"));
-        String actualMonth = "CARTILLA_PRINCIPAL_MT_";
+        String actualMonth = Constants.NOMBRE_CARTILLA_MT;
 
         for (String nameFile : filesToProcess) {
             if (nameFile != null && nameFile.startsWith(actualMonth)) {
                 logger.info("archivo: " + nameFile);
                 if (nameFile.toLowerCase().contains("cartilla")) {
-                    processFile(nameFile, ahoramilisecs);
+                    processFile(nameFile, ahoramilisecs, Constants.CARTILLA_MT);
                 } else {
                     logger.info("Este archivo no esta siendo considerado.");
                 }
             }
         }
-
     }
 
-    public void processFile(String nameFile, Long ahoramilisecs) {
+    //@Scheduled(cron = "*/30 * * * * *")
+    public void loadFileOutSA() {
+        if (!syncEnabled) {
+            logger.info("Carga del archivo para cartilla de productos SA no habilitada");
+            return;
+        }
+
+        Date ahora = new Date();
+        long ahoramilisecs = ahora.getTime();
+        logger.info("iniciando carga de cartilla de productos SA " + ahora + " .....");
+        List<String> filesToProcess = azureService.listFiles(azureConnectionReplaceSftp);
+        logger.info(String.format("listado de archivos del container storage en %s minutos", ((double) ((new Date()).getTime() - ahoramilisecs)) / 60000));
+        ahoramilisecs = new Date().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMyyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("America/Lima"));
+        String actualMonth = Constants.NOMBRE_CARTILLA_SA;
+
+        for (String nameFile : filesToProcess) {
+            if (nameFile != null && nameFile.startsWith(actualMonth)) {
+                logger.info("archivo: " + nameFile);
+                if (nameFile.toLowerCase().contains("cartilla")) {
+                    processFile(nameFile, ahoramilisecs, Constants.CARTILLA_SA);
+                } else {
+                    logger.info("Este archivo no esta siendo considerado.");
+                }
+            }
+        }
+    }
+
+    public void processFile(String nameFile, Long ahoramilisecs, String prefix) {
         logger.info("inicio procesar archivo: " + nameFile);
         String newFileName = String.format("COF_%s_%s", new Date().getTime(), nameFile);
         logger.info(String.format("Archivo cambiado de nombre en %s minutos", ((double) ((new Date()).getTime() - ahoramilisecs)) / 60000));
@@ -87,7 +118,7 @@ public class CartillaProductoServiceImpl {
         String filePath = "." + remoteDirectoryOut + nameFile;
 
         try {
-            syncCartillaProductFileOutlets(filePath, nameFile);
+            syncCartillaProductFileOutlets(filePath, nameFile, prefix);
             azureService.moveFile(nameFile, newFileName, azureConnectionReplaceSftp, "BASESOUT", "Backup");
         } catch (Exception e) {
             logger.error("Error: " + e.getMessage());
@@ -96,32 +127,34 @@ public class CartillaProductoServiceImpl {
             if (position != -1) {
                 errorFileName = nameFile.substring(0, position) + "0.txt";
             }
-            //azureService.moveFile(nameFile, errorFileName, azureConnectionReplaceSftp, "BASESOUT", "Error");
+            azureService.moveFile(nameFile, errorFileName, azureConnectionReplaceSftp, "BASESOUT", "Error");
         }
         logger.info(String.format("Archivo procesado en %s minutos", ((double) ((new Date()).getTime() - ahoramilisecs)) / 60000));
     }
 
-    public Response<String> syncCartillaProductFileOutlets(String remoteFilePath, String fileNameTxt) throws Exception {
+    public Response<String> syncCartillaProductFileOutlets(String remoteFilePath, String fileNameTxt, String prefix) throws Exception {
         logger.info("starting syncEquipmentOutlets of file: " + remoteFilePath);
         Response<String> response = new Response<>();
         File file = null;
         try {
             file = azureService.retrieveFile(fileNameTxt, azureConnectionReplaceSftp);
+            boolean validateFile = false;
             if (file != null) {
-                if (fileNameTxt.toLowerCase().contains("cartilla")) {
-                    processCartillaProductFile(file, fileNameTxt);
+                validateFile = processNameFile(fileNameTxt, prefix);
+                if (validateFile){
+                    processCartillaProductFile(file, fileNameTxt, prefix);
                 }
             } else {
                 throw new ApplicationException("file.not.found");
             }
 
             response.setResponseCode("0");
-            response.setResponseMessage("Cartilla de productos Movistar Total se sincronizo correctamente.");
-            logger.info("Cartilla de productos Movistar Total se sincronizo correctamente.");
+            response.setResponseMessage("Cartilla de productos %s se sincronizo correctamente.");
+            logger.info("Cartilla de productos %s se sincronizo correctamente.");
         } catch (IOException | ApplicationException e) {
             logger.info("Error al buscar el archivo");
             response.setResponseCode("1");
-            response.setResponseMessage("Error al sincronizar cartilla de productos Movistar Total.");
+            response.setResponseMessage("Error al sincronizar cartilla.");
         } finally {
             if (file != null) {
                 file.delete();
@@ -131,7 +164,8 @@ public class CartillaProductoServiceImpl {
         return response;
     }
 
-    public void processCartillaProductFile(File file, String fileNameTxt) throws IOException, Exception {
+    /*procesar archivo de cartilla txt y guardado en tdp_catalog*/
+    public void processCartillaProductFile(File file, String fileNameTxt, String prefix) throws IOException, Exception {
         logger.info("PuntosVenta.processEquipmentFile .........");
         List<TdpCatalogData> outsCatalog = new ArrayList<>();
         List<InventSyntaxError> syntaxErrors = new ArrayList<>();
@@ -213,33 +247,40 @@ public class CartillaProductoServiceImpl {
             model.setHfctoftthmigrationlogic(normalizeUsingJavaText(StringUtils.trim(out[53])));
             model.setHerramienta(fileNameTxt);
             model.setLinearegistro(count);
-
+            model.setPrefijo(prefix);
             outsCatalog.add(model);
         }
-
         in.close();
         fstream.close();
 
-        InventResult resultCatalog = tdpCatalogDao.cartillaProudctosMT(outsCatalog, fileNameTxt);
-
-        ProcessCatalogAditional(outsCatalog, fileNameTxt);
+        InventResult resultCatalog = tdpCatalogDao.cartillaProudctosMT(outsCatalog, fileNameTxt, prefix);
+        ProcessCatalogAditional(outsCatalog, fileNameTxt, prefix);
 
         resultCatalog.setSyntaxErrors(syntaxErrors);
         resultCatalog.setErrorCount(resultCatalog.getErrorCount() + syntaxErrors.size());
 
-        logger.info(String.format("Total registros leidos: %s, insertados: %s, actualizados: %s,actualizados order: %s, errores: %s",
-                outsCatalog.size(), resultCatalog.getInsertCount(), resultCatalog.getUpdateCount(), resultCatalog.getOrderCount(), resultCatalog.getErrorCount()));
+        String resultados = String.format("Total registros leidos: %s, insertados: %s, actualizados: %s,actualizados order: %s, errores: %s",
+                outsCatalog.size(), resultCatalog.getInsertCount(), resultCatalog.getUpdateCount(), resultCatalog.getOrderCount(), resultCatalog.getErrorCount());
 
-        List<String> linesWithError = new ArrayList<>();
+
+        logger.info(resultados);
+
+        ServiceCallEvent datos;
+
         for (InventSyntaxError error : syntaxErrors) {
-            linesWithError.add(error.getLine());
+            String response = error.getLine() + " : " + error.getCause();
+            datos = cargarDatosServiceCallEvent(Constants.RESULT_ERROR, Constants.SERVICE_CODE, fileNameTxt, response);
+            serviceCallEventsDao.registerEvent(datos);
         }
 
-        logger.info("fin PuntosVenta.processEquipmentFile .....................");
+        datos = cargarDatosServiceCallEvent(Constants.RESULT_OK, Constants.SERVICE_CODE, fileNameTxt, resultados);
+        serviceCallEventsDao.registerEvent(datos);
 
+        logger.info("fin cartilla productos.processCartillaFile .....................");
     }
 
-    public void ProcessCatalogAditional(List<TdpCatalogData> outsCatalog, String fileNameTxt) throws IOException, Exception {
+    /*guardado en tdp_catalog_aditional*/
+    public void ProcessCatalogAditional(List<TdpCatalogData> outsCatalog, String fileNameTxt, String prefix) throws IOException, Exception {
         logger.info("PuntosVenta.ProcessCatalogAditional .........");
 
         List<String> listCaneles = new ArrayList<>();
@@ -267,7 +308,7 @@ public class CartillaProductoServiceImpl {
             int indiceUbicacion = 0;
             for (String prov: listProvincias) {
                 if (distrito.equals("-")){
-                    ubicaciones.add(prov + "-todo");
+                    ubicaciones.add(prov + "- todo");
                 }else{
                     if(listDistrito.get(indiceUbicacion) !=null
                     && !listDistrito.get(indiceUbicacion).isEmpty()){
@@ -279,17 +320,17 @@ public class CartillaProductoServiceImpl {
                     }
                 }
             }
-            addAditionalData(invent, "6527", listCaneles, fileNameTxt);
-            addAditionalData(invent, "6528", listEntidades, fileNameTxt);
-            addAditionalData(invent, "6529", ubicaciones, fileNameTxt);
-            addAditionalData(invent, "6530", listCampanas, fileNameTxt);
+            addAditionalData(invent, "6527", listCaneles, fileNameTxt, prefix);
+            addAditionalData(invent, "6528", listEntidades, fileNameTxt, prefix);
+            addAditionalData(invent, "6529", ubicaciones, fileNameTxt, prefix);
+            addAditionalData(invent, "6530", listCampanas, fileNameTxt, prefix);
 
         }
-        //InventResult resultCatalogCatalogAditional = tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
-        tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt);
+        tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt, prefix);
     }
 
-    private void addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt) {
+    /*armado de objeto para tdp_catalog_aditional*/
+    private void addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt, String prefix) {
 
         for (String obj:lista) {
             TdpCatalogAditionalData model = new TdpCatalogAditionalData();
@@ -297,12 +338,47 @@ public class CartillaProductoServiceImpl {
             model.setParameterId(Integer.parseInt(additionalCode));
             model.setValue(obj.trim().toUpperCase());
             model.setHerramienta(fileNameTxt);
+            model.setPrefijo(prefix);
             outsCatalogAditional.add(model);
         }
     }
 
+    /*limpieza de lineas de archivos*/
     private static String normalizeUsingJavaText(String source){
         source = Normalizer.normalize(source, Normalizer.Form.NFD);
         return source.replaceAll("[^\\p{ASCII}]", "");
+    }
+
+    /*guardado en service_call_event*/
+    private static ServiceCallEvent cargarDatosServiceCallEvent(String msg, String code, String req, String res) {
+        ServiceCallEvent dataCallEvent = new ServiceCallEvent();
+
+        dataCallEvent.setUsername(Constants.USERNAME);
+        dataCallEvent.setMsg(msg);
+        dataCallEvent.setOrderId(StringUtils.EMPTY);
+        dataCallEvent.setDocNumber(StringUtils.EMPTY);
+        dataCallEvent.setServiceCode(code);
+        dataCallEvent.setServiceUrl(StringUtils.EMPTY);
+        dataCallEvent.setServiceRequest(req);
+        dataCallEvent.setServiceResponse(res);
+        dataCallEvent.setSourceApp(Constants.SOURCE_APP);
+        dataCallEvent.setSourceAppVersion(Constants.SOURCE_APP_VERSION);
+        dataCallEvent.setResult(msg);
+        return dataCallEvent;
+    }
+
+    /*validacion de nombre de archivo*/
+    private static boolean processNameFile(String nameFile, String prefix) {
+        boolean valor = false;
+        String[] b = nameFile.split("_");
+        int cant = b.length - 1;
+        int e = 0;
+        while (e <= cant) {
+            if (b[e].equalsIgnoreCase(prefix)) {
+                valor = true;
+            }
+            e++;
+        }
+        return valor;
     }
 }

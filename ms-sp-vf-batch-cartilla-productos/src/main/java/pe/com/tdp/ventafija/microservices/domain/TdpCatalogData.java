@@ -64,6 +64,8 @@ public class TdpCatalogData {
     private String hfctoftthmigrationlogic;
     private String herramienta;
     private Integer linearegistro;
+    private String prefijo;
+
 
     public TdpCatalogData() {
 
