@@ -12,7 +12,7 @@ public class Constants {
 	public static final String EstadoCaida = "CAIDA";
 	public static final String EstadoIngresado = "INGRESADO";
 
-	public static final String NOMBRE_CARTILLA_SA = "CARTILLA_PRINCIPAL_SA_";
+	public static final String NOMBRE_CARTILLA_SA = "CARTILLA_PRODUCTOS_SA_";
 	public static final String NOMBRE_CARTILLA_MT = "CARTILLA_PRODUCTOS_MT_";
 
 	public static final String CARTILLA_SA = "SA";

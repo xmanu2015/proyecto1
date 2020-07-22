@@ -51,7 +51,7 @@ public class CartillaProductoServiceImpl {
     List<TdpCatalogAditionalData> outsCatalogAditional = new ArrayList<>();
 
     //@Scheduled(cron = "${carga.cartilla.productosMT.api.sync.cron}")
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/59 * * * * *")
     public void loadFileOutMT() {
         if (!syncEnabled) {
             logger.info("Carga del archivo para cartilla de productos MT no habilitada");
@@ -80,7 +80,7 @@ public class CartillaProductoServiceImpl {
         }
     }
 
-    //@Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "*/30 * * * * *")
     public void loadFileOutSA() {
         if (!syncEnabled) {
             logger.info("Carga del archivo para cartilla de productos SA no habilitada");
@@ -166,7 +166,7 @@ public class CartillaProductoServiceImpl {
 
     /*procesar archivo de cartilla txt y guardado en tdp_catalog*/
     public void processCartillaProductFile(File file, String fileNameTxt, String prefix) throws IOException, Exception {
-        logger.info("PuntosVenta.processEquipmentFile .........");
+        logger.info("CartillaProductos.processEquipmentFile .........");
         List<TdpCatalogData> outsCatalog = new ArrayList<>();
         List<InventSyntaxError> syntaxErrors = new ArrayList<>();
 

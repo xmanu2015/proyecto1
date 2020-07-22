@@ -15,6 +15,7 @@ public class ServiceCallEventsDao {
     private static final Logger logger = LogManager.getLogger();
 
     public void registerEvent(ServiceCallEvent event) {
+        logger.info("iniciando registerEvent en tdp_ServiceCallEvent");
 
         try (Connection con = Database.datasource().getConnection()) {
             String insert = "INSERT INTO ibmx_a07e6d02edaf552.service_call_events (event_datetime, tag, username, msg,orderId, docNumber, serviceCode, serviceUrl, serviceRequest, serviceResponse, sourceApp,sourceAppVersion, result) VALUES (CURRENT_TIMESTAMP,?,?,?,?,?,?,?,?,?,?,?,?)";

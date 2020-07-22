@@ -35,7 +35,6 @@ public class TdpCatalogDao {
             psDelete.setString(1,prefix);
             int deletedRows = psDelete.executeUpdate();
             logger.info("Cantidad de rows eliminados del archivo " + fileNameTxt + ": " + deletedRows);
-
             String insert = " insert into ibmx_a07e6d02edaf552.tdp_catalog_2 " +
                     "(commercialoperation," +
                     "segmento," +
@@ -179,6 +178,8 @@ public class TdpCatalogDao {
             if (countBatch > 0) {
                 int[] result = psInsert.executeBatch();
                 totalInsert = processInsertCount(totalInsert, result);
+                logger.info("Tonny");
+
             }
         } catch (SQLException e) {
             logger.error("error en conexion: " + e.getMessage());
