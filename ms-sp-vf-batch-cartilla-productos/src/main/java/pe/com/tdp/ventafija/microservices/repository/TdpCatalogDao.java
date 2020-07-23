@@ -178,8 +178,6 @@ public class TdpCatalogDao {
             if (countBatch > 0) {
                 int[] result = psInsert.executeBatch();
                 totalInsert = processInsertCount(totalInsert, result);
-                logger.info("Tonny");
-
             }
         } catch (SQLException e) {
             logger.error("error en conexion: " + e.getMessage());

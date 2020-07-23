@@ -48,8 +48,6 @@ public class CartillaProductoServiceImpl {
     @Value("${visor.api.sync.enabled}")
     private Boolean syncEnabled;
 
-    List<TdpCatalogAditionalData> outsCatalogAditional = new ArrayList<>();
-
     //@Scheduled(cron = "${carga.cartilla.productosMT.api.sync.cron}")
     @Scheduled(cron = "*/59 * * * * *")
     public void loadFileOutMT() {
@@ -282,16 +280,15 @@ public class CartillaProductoServiceImpl {
     /*guardado en tdp_catalog_aditional*/
     public void ProcessCatalogAditional(List<TdpCatalogData> outsCatalog, String fileNameTxt, String prefix) throws IOException, Exception {
         logger.info("PuntosVenta.ProcessCatalogAditional .........");
+        List<TdpCatalogAditionalData> outsCatalogAditional= new ArrayList<>();
 
-        List<String> listCaneles = new ArrayList<>();
-        List<String> listEntidades = new ArrayList<>();
-        List<String> listCampanas = new ArrayList<>();
-        List<String> listProvincias = new ArrayList<>();
-        List<String> listDistrito = new ArrayList<>();
-
+        List<String> listCaneles;
+        List<String> listEntidades;
+        List<String> listCampanas;
+        List<String> listProvincias;
+        List<String> listDistrito;
 
         for (TdpCatalogData invent : outsCatalog) {
-
             List<String> ubicaciones = new ArrayList<>();
             String caneles = invent.getCanal().replace("ñ", "n");
             String entidades = invent.getEntidad().replace("ñ", "n");
@@ -320,17 +317,30 @@ public class CartillaProductoServiceImpl {
                     }
                 }
             }
-            addAditionalData(invent, "6527", listCaneles, fileNameTxt, prefix);
-            addAditionalData(invent, "6528", listEntidades, fileNameTxt, prefix);
-            addAditionalData(invent, "6529", ubicaciones, fileNameTxt, prefix);
-            addAditionalData(invent, "6530", listCampanas, fileNameTxt, prefix);
 
+            for (TdpCatalogAditionalData addAditionalDatum : addAditionalData(invent, "6527", listCaneles, fileNameTxt, prefix)) {
+                outsCatalogAditional.add(addAditionalDatum);
+            }
+
+            for (TdpCatalogAditionalData addAditionalDatum : addAditionalData(invent, "6528", listEntidades, fileNameTxt, prefix)) {
+                outsCatalogAditional.add(addAditionalDatum);
+            }
+
+            for (TdpCatalogAditionalData addAditionalDatum : addAditionalData(invent, "6529", ubicaciones, fileNameTxt, prefix)) {
+                outsCatalogAditional.add(addAditionalDatum);
+            }
+
+            for (TdpCatalogAditionalData addAditionalDatum : addAditionalData(invent, "6530", listCampanas, fileNameTxt, prefix)) {
+                outsCatalogAditional.add(addAditionalDatum);
+            }
         }
         tdpCatalogAditionalDao.CatalogAditional(outsCatalogAditional, fileNameTxt, prefix);
     }
 
     /*armado de objeto para tdp_catalog_aditional*/
-    private void addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt, String prefix) {
+    private List<TdpCatalogAditionalData> addAditionalData(TdpCatalogData invent, String additionalCode, List<String> lista, String fileNameTxt, String prefix) {
+
+        List<TdpCatalogAditionalData> outsCatalogAdit= new ArrayList<>();
 
         for (String obj:lista) {
             TdpCatalogAditionalData model = new TdpCatalogAditionalData();
@@ -339,8 +349,9 @@ public class CartillaProductoServiceImpl {
             model.setValue(obj.trim().toUpperCase());
             model.setHerramienta(fileNameTxt);
             model.setPrefijo(prefix);
-            outsCatalogAditional.add(model);
+            outsCatalogAdit.add(model);
         }
+        return outsCatalogAdit;
     }
 
     /*limpieza de lineas de archivos*/
